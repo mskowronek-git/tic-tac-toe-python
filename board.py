@@ -1,20 +1,12 @@
 from dataclasses import dataclass, field
 
-
 @dataclass
 class Board:
+    size: int = 3  # Standardgröße des Spielfelds
     board: list = field(default_factory=list)
 
     def create_board(self):
-        for i in range(3):
-            row = []
-            for j in range(3):
-                row.append('-')
-            self.board.append(row)
+        self.board = [['-' for _ in range(self.size)] for _ in range(self.size)]
 
     def is_board_filled(self):
-        for row in self.board:
-            for item in row:
-                if item == '-':
-                    return False
-        return True
+        return all(cell != '-' for row in self.board for cell in row)
