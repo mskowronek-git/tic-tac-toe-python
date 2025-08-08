@@ -66,20 +66,37 @@ class Game:
     def fix_spot(self, row, col, player):
         self.board.board[row][col] = player
 
+    # New function for testing doc generation
+    def restart_game(self):
+        self.board.create_board()
+        self.play()
+
+    # Aktuell prüft is_winner nur für ein 3×3-Board. 
+    # Wenn du ein größeres Spielfeld (z. B. 5×5) verwendest, funktioniert das nicht korrekt.
+    # Du kannst die Gewinnprüfung so ändern, dass sie drei gleiche Zeichen in Folge erkennt – egal wo sie stehen.
     def is_winner(self, player):
-        # Three in a row
-        for i in range(3):
-            if self.board.board[i][0] == self.board.board[i][1] == self.board.board[i][2] == player:
-                return True
-            if self.board.board[0][i] == self.board.board[1][i] == self.board.board[2][i] == player:
-                return True
+        size = len(self.board.board)
+        win_length = 3  # Anzahl der gleichen Zeichen in Folge für Sieg
 
-        # Diagonals
-        if self.board.board[0][0] == self.board.board[1][1] == self.board.board[2][2] == player:
-            return True
+        # Zeilen und Spalten prüfen
+        for i in range(size):
+            for j in range(size - win_length + 1):
+                # Zeile
+                if all(self.board.board[i][j + k] == player for k in range(win_length)):
+                    return True
+                # Spalte
+                if all(self.board.board[j + k][i] == player for k in range(win_length)):
+                    return True
 
-        if self.board.board[0][2] == self.board.board[1][1] == self.board.board[2][0] == player:
-            return True
-
+        # Diagonalen prüfen
+        for i in range(size - win_length + 1):
+            for j in range(size - win_length + 1):
+                # Hauptdiagonale
+                if all(self.board.board[i + k][j + k] == player for k in range(win_length)):
+                    return True
+                # Nebendiagonale
+                if all(self.board.board[i + k][j + win_length - 1 - k] == player for k in range(win_length)):
+                    return True
         return False
+
 
